@@ -1,25 +1,59 @@
+using System.Text.Json.Serialization;
+using ProductsAPI.Helpers;
+using ProductsAPI.Repositories;
+using WebApi.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// add services to DI container
+{
+    var services = builder.Services;
+    var env = builder.Environment;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    services.AddCors();
+    services.AddControllers().AddJsonOptions(x =>
+    {
+        // serialize enums as strings in api responses (e.g. Role)
+        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+        // ignore omitted parameters on models to enable optional params (e.g. User update)
+        x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+
+    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+    // configure strongly typed settings object
+    services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
+
+    // configure DI for application services
+    services.AddSingleton<DataContext>();
+    services.AddScoped<IProductRepository, ProductRepository>();
+    services.AddScoped<IProductService, ProductService>();
+}
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// ensure database and tables exist
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await context.Init();
 }
 
-app.UseHttpsRedirection();
+// configure HTTP request pipeline
+{
+    // global cors policy
+    app.UseCors(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
-app.UseAuthorization();
+    // global error handler
 
-app.MapControllers();
+    app.MapControllers();
+}
 
 app.Run();

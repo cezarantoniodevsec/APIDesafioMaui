@@ -12,7 +12,6 @@ namespace ProductsAPI.Helpers
             CreateMap<CreateProductRequest, Product>();
 
             CreateMap<UpdateProductRequest, Product>();
-
         }
     }
 }

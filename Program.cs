@@ -30,8 +30,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     // configure DI for application services
     services.AddSingleton<DataContext>();
-    services.AddScoped<IProductRepository, ProductRepository>();
-    services.AddScoped<IProductService, ProductService>();
+    //services.AddScoped<IProductRepository, ProductRepository>();
+    //services.AddScoped<IProductService, ProductService>();
 }
 
 var app = builder.Build();
@@ -40,7 +40,7 @@ var app = builder.Build();
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-    await context.Init();
+    // await context.Init();
 }
 
 // configure HTTP request pipeline

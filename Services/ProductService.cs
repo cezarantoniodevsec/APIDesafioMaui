@@ -5,18 +5,18 @@ using ProductsAPI.Repositories;
 using WebApi.Entities;
 using WebApi.Models.Product;
 
-public interface IProductService
+/*public interface IProductService
 {
     Task<IEnumerable<Product>> GetAll();
     Task<Product> GetById(int id);
     Task Create(CreateProductRequest model);
     Task Update(int id, UpdateProductRequest model);
     Task Delete(int id);
-}
+}*/
 
-public class ProductService : IProductService
+public class ProductService 
 {
-    private IProductRepository _ProductRepository;
+    /*private IProductRepository _ProductRepository;
     private readonly IMapper _mapper;
 
     public ProductService(
@@ -70,5 +70,5 @@ public class ProductService : IProductService
     public async Task Delete(int id)
     {
         await _ProductRepository.Delete(id);
-    }
+    }*/
 }

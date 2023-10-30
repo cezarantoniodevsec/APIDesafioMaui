@@ -5,17 +5,17 @@ using WebApi.Entities;
 
 namespace ProductsAPI.Repositories
 {
-    public interface IProductRepository
+    /*public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetAll();
         Task<Product> GetById(int id);
         Task Create(Product product);
         Task Update(Product product);
         Task Delete(int id);
-    }
-    public class ProductRepository : IProductRepository
+    }*/
+    public class ProductRepository 
     {
-        private DataContext _context;
+        /*private DataContext _context;
 
         public ProductRepository(DataContext context)
         {
@@ -72,6 +72,6 @@ namespace ProductsAPI.Repositories
             WHERE Id = @id
         """;
             await connection.ExecuteAsync(sql, new { id });
-        }
+        }*/
     }
 }
